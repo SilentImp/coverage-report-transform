@@ -42,7 +42,7 @@ module.exports = async (filenames, thresholds) => {
   });
   await Promise.all(promisesList);
   const table = [
-    ['Package', 'Lines', 'Statements', 'Functions', 'Branches', 'Thresholds'],
+    ['Package', 'Lines', 'Statements', 'Functions', 'Branches'],
   ];
   files.forEach((total, packageName) => {
     delete total.branchesTrue;
@@ -56,12 +56,11 @@ module.exports = async (filenames, thresholds) => {
       flag = '🟢';
     }
     table.push([
-      packageName, 
+      `${flag} ${packageName}`, 
       `${checkColor(total.lines.pct, thresholds)} ${total.lines.pct}%`, 
       `${checkColor(total.statements.pct, thresholds)} ${total.statements.pct}%`, 
       `${checkColor(total.functions.pct, thresholds)} ${total.functions.pct}%`, 
       `${checkColor(total.branches.pct, thresholds)} ${total.branches.pct}%`,
-      flag,
     ]);
   });
   return markdownTable(table);
