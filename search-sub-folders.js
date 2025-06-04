@@ -1,6 +1,7 @@
 'use strict';
 const fs = require('fs').promises;
 const path = require('path');
+const IGNORE_FOLDERS = ['node_modules', '.git', '.vscode'];
 
 module.exports = async (filename, dir, folders, level, isVerbose = false) => {
     const results = [];
@@ -29,6 +30,10 @@ module.exports = async (filename, dir, folders, level, isVerbose = false) => {
                 if (isVerbose) console.log(`Checking ${relativePath}`);
 
                 if (entry.isDirectory()) {
+                  if (IGNORE_FOLDERS.includes(entry.name)) {
+                    if (isVerbose) console.log(`Skipping ${relativePath} because it's in the ignore list`);
+                    continue;
+                  }
                   await searchInDirectory(fullPath, currentLevel + 1);
                 }
 

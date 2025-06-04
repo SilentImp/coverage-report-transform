@@ -20,9 +20,18 @@ const findPackageJson = (startPath, level = 3) => {
   return findPackageJson(parentPath, level - 1);
 };
 
-module.exports = async (filenames) => {
+const checkColor = (value, threshold) => {
+  if (value >= threshold[0] && value < threshold[1]) {
+    return 'yellow';
+  } else if (value >= threshold[1]) {
+    return 'green';
+  } else {
+    return 'red';
+  }
+}
+
+module.exports = async (filenames, thresholds) => {
   const { markdownTable } = await import('markdown-table');
-  let markdown = '';
   const files = new Map();
   const promisesList = filenames.map(async (filename) => {
     const packageName = findPackageJson(path.dirname(filename));
@@ -33,10 +42,19 @@ module.exports = async (filenames) => {
   });
   await Promise.all(promisesList);
   const table = [
-    ['Package', 'Lines', 'Statements', 'Functions', 'Branches'],
+    ['Package', 'Lines', 'Statements', 'Functions', 'Branches', 'Thresholds'],
   ];
   files.forEach((total, packageName) => {
-    table.push([packageName, total.lines.pct, total.statements.pct, total.functions.pct, total.branches.pct]);
+    delete total.branchesTrue;
+    const isPassingThresholds = Object.keys(total).every(key => total[key].pct >= thresholds[0]);
+    table.push([
+      packageName, 
+      `<span style="color: ${checkColor(total.lines.pct, thresholds)}">${total.lines.pct}%</span>`, 
+      `<span style="color: ${checkColor(total.statements.pct, thresholds)}">${total.statements.pct}%</span>`, 
+      `<span style="color: ${checkColor(total.functions.pct, thresholds)}">${total.functions.pct}%</span>`, 
+      `<span style="color: ${checkColor(total.branches.pct, thresholds)}">${total.branches.pct}%</span>`,
+      isPassingThresholds ? '✅' : '❌',
+    ]);
   });
   return markdownTable(table);
 };

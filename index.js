@@ -15,7 +15,8 @@ program
   .option('-l, --level [level]', 'Search depth level', 3)
   .option('-o, --only-failed', 'Show only failed suits', false)
   .option('-v, --verbose', 'Output additiona information', false)
-  .action(async (dir, { name, folders, level, verbose: isVerbose, onlyFailed }) => {
+  .option('-t, --thresholds [thresholds]', 'Thresholds for the coverage report', [90, 100])
+  .action(async (dir, { name, folders, level, verbose: isVerbose, onlyFailed, thresholds }) => {
 
     if (isVerbose) {
       console.log({
@@ -24,13 +25,14 @@ program
         folders,
         level,
         verbose: isVerbose,
+        thresholds,
         onlyFailed,
       })
     }
     
     try {
       const files = await searchSubFolders(name, dir, folders, level, isVerbose);
-      const report = await transformJSON(files, onlyFailed);
+      const report = await transformJSON(files, thresholds);
       process.stdout.write(`# Code Coverage Report
 
 ${report}\n`);

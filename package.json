@@ -1,6 +1,6 @@
 {
   "name": "coverage-report-transform",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Collect the list of packages from changeset folder",
   "main": "index.js",
   "bin": {
@@ -18,6 +18,13 @@
   "license": "ISC",
   "dependencies": {
     "commander": "^11.0.0",
-    "markdown-table": "^3.0.4"
+    "markdown-table": "^3.0.4",
+    "vite": "^6.3.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
   }
 }
