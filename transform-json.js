@@ -22,11 +22,11 @@ const findPackageJson = (startPath, level = 3) => {
 
 const checkColor = (value, threshold) => {
   if (value >= threshold[0] && value < threshold[1]) {
-    return 'yellow';
+    return '🟡';
   } else if (value >= threshold[1]) {
-    return 'green';
+    return '🟢';
   } else {
-    return 'red';
+    return '🔴';
   }
 }
 
@@ -49,10 +49,10 @@ module.exports = async (filenames, thresholds) => {
     const isPassingThresholds = Object.keys(total).every(key => total[key].pct >= thresholds[0]);
     table.push([
       packageName, 
-      `<span style="color: ${checkColor(total.lines.pct, thresholds)}">${total.lines.pct}%</span>`, 
-      `<span style="color: ${checkColor(total.statements.pct, thresholds)}">${total.statements.pct}%</span>`, 
-      `<span style="color: ${checkColor(total.functions.pct, thresholds)}">${total.functions.pct}%</span>`, 
-      `<span style="color: ${checkColor(total.branches.pct, thresholds)}">${total.branches.pct}%</span>`,
+      `${checkColor(total.lines.pct, thresholds)} ${total.lines.pct}%`, 
+      `${checkColor(total.statements.pct, thresholds)} ${total.statements.pct}%`, 
+      `${checkColor(total.functions.pct, thresholds)} ${total.functions.pct}%`, 
+      `${checkColor(total.branches.pct, thresholds)} ${total.branches.pct}%`,
       isPassingThresholds ? '✅' : '❌',
     ]);
   });
