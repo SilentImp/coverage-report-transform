@@ -1,6 +1,6 @@
 {
   "name": "coverage-report-transform",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Collect the list of packages from changeset folder",
   "main": "index.js",
   "bin": {
