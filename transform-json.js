@@ -46,14 +46,22 @@ module.exports = async (filenames, thresholds) => {
   ];
   files.forEach((total, packageName) => {
     delete total.branchesTrue;
-    const isPassingThresholds = Object.keys(total).every(key => total[key].pct >= thresholds[0]);
+    let flag = '🔴';
+    const isPassingMinThresholds = Object.keys(total).every(key => total[key].pct >= thresholds[0]);
+    if (isPassingMinThresholds) {
+      flag = '🟡';
+    }
+    const isPassingMaxThresholds = Object.keys(total).every(key => total[key].pct >= thresholds[1]);
+    if (isPassingMaxThresholds) {
+      flag = '🟢';
+    }
     table.push([
       packageName, 
       `${checkColor(total.lines.pct, thresholds)} ${total.lines.pct}%`, 
       `${checkColor(total.statements.pct, thresholds)} ${total.statements.pct}%`, 
       `${checkColor(total.functions.pct, thresholds)} ${total.functions.pct}%`, 
       `${checkColor(total.branches.pct, thresholds)} ${total.branches.pct}%`,
-      isPassingThresholds ? '✅' : '❌',
+      flag,
     ]);
   });
   return markdownTable(table);
